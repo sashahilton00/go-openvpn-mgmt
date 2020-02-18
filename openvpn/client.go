@@ -118,7 +118,7 @@ func Dial(addr string, eventCh chan<- Event) (*MgmtClient, error) {
 // a hold is already in effect, a HoldEvent will be emitted on the event
 // channel.
 func (c *MgmtClient) HoldRelease() error {
-	_, err := c.simpleCommand("hold release")
+	_, err := c.SimpleCommand("hold release")
 	return err
 }
 
@@ -131,9 +131,9 @@ func (c *MgmtClient) HoldRelease() error {
 func (c *MgmtClient) SetStateEvents(on bool) error {
 	var err error
 	if on {
-		_, err = c.simpleCommand("state on")
+		_, err = c.SimpleCommand("state on")
 	} else {
-		_, err = c.simpleCommand("state off")
+		_, err = c.SimpleCommand("state off")
 	}
 	return err
 }
@@ -146,9 +146,9 @@ func (c *MgmtClient) SetStateEvents(on bool) error {
 func (c *MgmtClient) SetEchoEvents(on bool) error {
 	var err error
 	if on {
-		_, err = c.simpleCommand("echo on")
+		_, err = c.SimpleCommand("echo on")
 	} else {
-		_, err = c.simpleCommand("echo off")
+		_, err = c.SimpleCommand("echo off")
 	}
 	return err
 }
@@ -163,7 +163,7 @@ func (c *MgmtClient) SetEchoEvents(on bool) error {
 // Set the time interval to zero in order to disable byte count events.
 func (c *MgmtClient) SetByteCountEvents(interval time.Duration) error {
 	msg := fmt.Sprintf("bytecount %d", int(interval.Seconds()))
-	_, err := c.simpleCommand(msg)
+	_, err := c.SimpleCommand(msg)
 	return err
 }
 
@@ -180,7 +180,7 @@ func (c *MgmtClient) SetByteCountEvents(interval time.Duration) error {
 // cause very unpredictable behavior.
 func (c *MgmtClient) SendSignal(name string) error {
 	msg := fmt.Sprintf("signal %q", name)
-	_, err := c.simpleCommand(msg)
+	_, err := c.SimpleCommand(msg)
 	return err
 }
 
@@ -210,7 +210,7 @@ func (c *MgmtClient) LatestState() (*StateEvent, error) {
 
 // Pid retrieves the process id of the connected OpenVPN process.
 func (c *MgmtClient) Pid() (int, error) {
-	raw, err := c.simpleCommand("pid")
+	raw, err := c.SimpleCommand("pid")
 	if err != nil {
 		return 0, err
 	}
@@ -294,7 +294,7 @@ func (c *MgmtClient) readCommandResponsePayload() ([][]byte, error) {
 	return lines, nil
 }
 
-func (c *MgmtClient) simpleCommand(cmd string) ([]byte, error) {
+func (c *MgmtClient) SimpleCommand(cmd string) ([]byte, error) {
 	err := c.sendCommand([]byte(cmd))
 	if err != nil {
 		return nil, err
